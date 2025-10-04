@@ -145,7 +145,7 @@ int main() {
             break;
         }
         printBoard(board);
-        printf("Player %c, choose a column (1-7): ", curr);
+        printf("Player %c, choose a column (1-7): \n", curr);
         scanf("%d", &col);
         printf("\n");
         idk = place(curr, col - 1, board);
