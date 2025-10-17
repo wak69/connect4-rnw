@@ -41,7 +41,7 @@ void freeBoard(char** board) {
 }
 
 int checkHorizontal(int row, int col, char** board, char c) {
-    (void)col;
+    int count = 0;
     for (int i = 0; i < 7; i++) {
         if (board[row][i] == c) {
             count++;
@@ -56,7 +56,7 @@ int checkHorizontal(int row, int col, char** board, char c) {
 }
 
 int checkVertical(int row, int col, char** board, char c) {
-    (void)row;
+    int count = 0;
     for (int i = 0; i < 6; i++) {
         if (board[i][col] == c) {
             count++;
@@ -141,12 +141,12 @@ int col;
 }
 
 int main() {
-    srand(time(Null));
+    srand(time(NULL));
     int mode;
     printf("Welcome to connect4!\n");
     printf("1. Two Player Mode\n");
     printf("2. Play vs Easy Bot\n");
-    printf("Choose mode: ");
+    printf("Choose mode: \n");
     scanf("%d", &mode);
     
     char curr = 'A';
@@ -164,7 +164,7 @@ int main() {
             if(scanf("%d", &col) != 1){
                 printf("Invalid input! Try again. \n");
                 while(getchar() != '\n');
-                contiune;
+                continue;
             }
             col -= 1;
         }else {
@@ -172,7 +172,7 @@ int main() {
             col = botMove(board);
             printf("Bot chooses column %d\n", col + 1);
         }
-        Result = place(curr, col, board);
+        result = place(curr, col, board);
         if (result == INVALID_COLUMN){
             printf("Invalid move, try again.\n");
             continue;
