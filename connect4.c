@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 enum PlacingCodes {NO_WIN, WIN, INVALID_COLUMN};
 
@@ -26,10 +27,10 @@ void printBoard(char** board) {
 int checkForRemainingMoves(char** board) {
     for (int i = 0; i < 7; i++) {
         if (board[0][i] != '.') {
-            return 0;
+            return 1;
         }
     }
-    return 1;
+    return 0;
 }
 
 void freeBoard(char** board) {
@@ -40,7 +41,7 @@ void freeBoard(char** board) {
 }
 
 int checkHorizontal(int row, int col, char** board, char c) {
-    int count = 0;
+    (void)col;
     for (int i = 0; i < 7; i++) {
         if (board[row][i] == c) {
             count++;
@@ -55,7 +56,7 @@ int checkHorizontal(int row, int col, char** board, char c) {
 }
 
 int checkVertical(int row, int col, char** board, char c) {
-    int count = 0;
+    (void)row;
     for (int i = 0; i < 6; i++) {
         if (board[i][col] == c) {
             count++;
@@ -131,38 +132,67 @@ int place(char c, int col, char** board) {
     }
     return NO_WIN;
 }
+int botMove(char** board){
+int col;
+    do{
+        col = rand() % 7;
+    }while (board[0][col] != '.');
+    return  col;
+}
 
 int main() {
-    int win = 0;
-    int idk;
+    srand(time(Null));
+    int mode;
+    printf("Welcome to connect4!\n");
+    printf("1. Two Player Mode\n");
+    printf("2. Play vs Easy Bot\n");
+    printf("Choose mode: ");
+    scanf("%d", &mode);
+    
     char curr = 'A';
-    int col;
+    int col, result;
     char** board = initBoard();
-    printf("Welcome to Connect 4!\nPlayer A: A\nPlayer B: B\n");
+    int vsBot = (mode == 2);
     while (1) {
-        if (checkForRemainingMoves(board) == 0) {
-            printf("No more remaining moves :(\n");
-            break;
-        }
+       if (!checkForRemainingMoves(board)){
+           printf("No more remaining moves. It's a draw!\n");
+       }
         printBoard(board);
-        printf("Player %c, choose a column (1-7): \n", curr);
-        scanf("%d", &col);
-        printf("\n");
-        idk = place(curr, col - 1, board);
-        if (idk == INVALID_COLUMN) {
-            printf("Invalid placement, try another column\n");
+        if(curr == 'A' || !vsBot){
+            // human turn
+            printf("Player %c, choose a column (1-7): ", curr);
+            if(scanf("%d", &col) != 1){
+                printf("Invalid input! Try again. \n");
+                while(getchar() != '\n');
+                contiune;
+            }
+            col -= 1;
+        }else {
+            // bot turn
+            col = botMove(board);
+            printf("Bot chooses column %d\n", col + 1);
+        }
+        Result = place(curr, col, board);
+        if (result == INVALID_COLUMN){
+            printf("Invalid move, try again.\n");
             continue;
-        } else if (idk == WIN) {
+        }else if (result == WIN){
             printBoard(board);
-            printf("Player %c wins!", curr);
+            if (vsBot && curr == 'B'){
+                printf("Bot wins!\n");
+            }else {
+                printf("Player %c wins!\n", curr);
+            }
             break;
         }
-        if (curr == 'A') {
+        // switch turns
+        if (curr == 'A'){
             curr = 'B';
-        } else {
+        }else {
             curr = 'A';
         }
     }
     freeBoard(board);
     return 0;
+
 }
