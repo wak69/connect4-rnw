@@ -27,10 +27,10 @@ void printBoard(char** board) {
 int checkForRemainingMoves(char** board) {
     for (int i = 0; i < 7; i++) {
         if (board[0][i] != '.') {
-            return 1;
+            return 0;
         }
     }
-    return 0;
+    return 1;
 }
 
 void freeBoard(char** board) {
@@ -133,10 +133,10 @@ int place(char c, int col, char** board) {
     return NO_WIN;
 }
 int botMove(char** board){
-int col;
+    int col;
     do{
         col = rand() % 7;
-    }while (board[0][col] != '.');
+    } while (board[0][col] != '.');
     return  col;
 }
 
