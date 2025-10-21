@@ -160,7 +160,7 @@ int main() {
         printBoard(board);
         if(curr == 'A' || !vsBot){
             // human turn
-            printf("Player %c, choose a column (1-7): ", curr);
+            printf("Player %c, choose a column (1-7): \n", curr);
             if(scanf("%d", &col) != 1){
                 printf("Invalid input! Try again. \n");
                 while(getchar() != '\n');
