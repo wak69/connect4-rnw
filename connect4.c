@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "checkFunctions.h"
+#include "easyBot.h"
+#include "normalBot.h"
 
 enum PlacingCodes {NO_WIN, WIN, INVALID_COLUMN};
+enum Difficulties {EASY, NORMAL, HARD};
 
 char** initBoard() {
     char** board = (char**) malloc(6*sizeof(char*));
@@ -26,11 +30,11 @@ void printBoard(char** board) {
 
 int checkForRemainingMoves(char** board) {
     for (int i = 0; i < 7; i++) {
-        if (board[0][i] != '.') {
-            return 0;
+        if (board[0][i] == '.') {
+            return 1;
         }
     }
-    return 1;
+    return 0;
 }
 
 void freeBoard(char** board) {
@@ -38,81 +42,6 @@ void freeBoard(char** board) {
         free(board[i]);
     }
     free(board);
-}
-
-int checkHorizontal(int row, int col, char** board, char c) {
-    int count = 0;
-    for (int i = 0; i < 7; i++) {
-        if (board[row][i] == c) {
-            count++;
-        } else {
-            count = 0;
-        }
-        if (count == 4) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-int checkVertical(int row, int col, char** board, char c) {
-    int count = 0;
-    for (int i = 0; i < 6; i++) {
-        if (board[i][col] == c) {
-            count++;
-        } else {
-            count = 0;
-        }
-        if (count == 4) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-int checkLRDiagonal(int row, int col, char** board, char c) {
-    int x = col, y = row;
-    while (x > 0 && y > 0) {
-        x--;
-        y--;
-    }
-    int count = 0;
-    while (x < 7 && y < 6) {
-        if (board[y][x] == c) {
-            count++;
-        } else {
-            count = 0;
-        }
-        if (count == 4) {
-            return 1;
-        }
-        x++;
-        y++;
-    }
-    return 0;
-}
-
-int checkRLDiagonal(int row, int col, char** board, char c) {
-    int x = col;
-    int y = row;
-    while (x < 7 && y > 0) {
-        x++;
-        y--;
-    }
-    int count = 0;
-    while (x >= 0 && y < 6) {
-        if (board[y][x] == c) {
-            count++;
-        } else {
-            count = 0;
-        }
-        if (count == 4) {
-            return 1;
-        }
-        x--;
-        y++;
-    }
-    return 0;
 }
 
 int place(char c, int col, char** board) {
@@ -132,30 +61,30 @@ int place(char c, int col, char** board) {
     }
     return NO_WIN;
 }
-int botMove(char** board){
-    int col;
-    do{
-        col = rand() % 7;
-    } while (board[0][col] != '.');
-    return  col;
-}
 
 int main() {
     srand(time(NULL));
     int mode;
+    int difficulty;
     printf("Welcome to connect4!\n");
     printf("1. Two Player Mode\n");
-    printf("2. Play vs Easy Bot\n");
-    printf("Choose mode: \n");
+    printf("2. Play vs Bot\n");
+    printf("Choose mode (1 or 2): \n");
     scanf("%d", &mode);
     
     char curr = 'A';
     int col, result;
     char** board = initBoard();
     int vsBot = (mode == 2);
+    if (vsBot) {
+        printf("1. Easy\n2. Normal\nChoose the bot's difficulty (1 or 2): \n");
+        scanf("%d", &difficulty);
+        difficulty--;
+    }
     while (1) {
        if (!checkForRemainingMoves(board)){
            printf("No more remaining moves. It's a draw!\n");
+           break;
        }
         printBoard(board);
         if(curr == 'A' || !vsBot){
@@ -169,7 +98,11 @@ int main() {
             col -= 1;
         }else {
             // bot turn
-            col = botMove(board);
+            if (difficulty == EASY) {
+                col = easyMove(board);
+            } else {
+                col = normalMove(board);
+            }
             printf("Bot chooses column %d\n", col + 1);
         }
         result = place(curr, col, board);

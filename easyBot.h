@@ -1,0 +1,1 @@
+int easyMove(char** board);
