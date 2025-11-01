@@ -1,0 +1,1 @@
+int normalMove(char** board);
