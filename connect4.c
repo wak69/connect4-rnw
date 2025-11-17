@@ -4,6 +4,7 @@
 #include "checkFunctions.h"
 #include "easyBot.h"
 #include "normalBot.h"
+#include "hardBot.h"
 
 enum PlacingCodes {NO_WIN, WIN, INVALID_COLUMN};
 enum Difficulties {EASY, NORMAL, HARD};
@@ -77,7 +78,7 @@ int main() {
     char** board = initBoard();
     int vsBot = (mode == 2);
     if (vsBot) {
-        printf("1. Easy\n2. Normal\nChoose the bot's difficulty (1 or 2): \n");
+        printf("1. Easy\n2. Normal\n3. Hard\nChoose the bot's difficulty (1, 2, or 3): \n");
         scanf("%d", &difficulty);
         difficulty--;
     }
@@ -100,8 +101,10 @@ int main() {
             // bot turn
             if (difficulty == EASY) {
                 col = easyMove(board);
-            } else {
+            } else if (difficulty == NORMAL) {
                 col = normalMove(board);
+            } else {
+                col = hardMove(board, curr);
             }
             printf("Bot chooses column %d\n", col + 1);
         }
