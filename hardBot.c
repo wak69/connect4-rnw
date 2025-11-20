@@ -1,6 +1,6 @@
 #include <limits.h>
 #include "hardBot.h"
-#define MAX_DEPTH 5 //6 makes the bot fucking stupid what the fuck, 7 makes the bot take incredibly long and makes my laptop overheat like crazy, might fix this with multithreading
+#define MAX_DEPTH 5 //even numbers make the bot lose since it would be on the min stage, anything >= 7 makes the bot take incredibly long 
 
 int streak(char** board, int r, int c, int dr, int dc, char curr) {
     int streak = 0;
@@ -33,74 +33,74 @@ int evalBoard(char** board, char bot, char opp) { //heuristic function to calc h
         for (int col = 0; col < 7; col++) {
             int streakBotH = streak(board, row, col, 0, 1, bot); //checking for horizontal streaks and prioritizing ones where the bot has more pieces
             if (streakBotH == 4) {
-                score += 1000;
+                score += 10000;
             } else if (streakBotH == 3) {
-                score += 50;
+                score += 100;
             } else if (streakBotH == 2) {
-                score += 10;
+                score += 20;
             }
 
             int streakOppH = streak(board, row, col, 0, 1, opp); //here we penalize streaks where the opponent has pieces
             if (streakOppH == 4) {
-                score -= 1000;
+                score -= 10000;
             } else if (streakOppH == 3) {
-                score -= 50;
+                score -= 100;
             } else if (streakOppH == 2) {
-                score -= 10;
+                score -= 20;
             }
 
             int streakBotV = streak(board, row, col, 1, 0, bot); //same for all other directions
             if (streakBotH == 4) {
-                score += 1000;
+                score += 10000;
             } else if (streakBotH == 3) {
-                score += 50;
+                score += 100;
             } else if (streakBotH == 2) {
-                score += 10;
+                score += 20;
             }
 
             int streakOppV = streak(board, row, col, 1, 0, opp); 
             if (streakOppV == 4) {
-                score -= 1000;
+                score -= 10000;
             } else if (streakOppV == 3) {
-                score -= 50;
+                score -= 100;
             } else if (streakOppV == 2) {
-                score -= 10;
+                score -= 20;
             }
 
             int streakBotD1 = streak(board, row, col, 1, 1, bot); 
             if (streakBotD1 == 4) {
-                score += 1000;
+                score += 10000;
             } else if (streakBotD1 == 3) {
-                score += 50;
+                score += 100;
             } else if (streakBotD1 == 2) {
-                score += 10;
+                score += 20;
             }
 
             int streakOppD1 = streak(board, row, col, 1, 1, opp); 
             if (streakOppD1 == 4) {
-                score -= 1000;
+                score -= 10000;
             } else if (streakOppD1 == 3) {
-                score -= 50;
+                score -= 100;
             } else if (streakOppD1 == 2) {
-                score -= 10;
+                score -= 20;
             }
 
             int streakBotD2 = streak(board, row, col, 1, -1, bot); 
             if (streakBotH == 4) {
-                score += 1000;
+                score += 10000;
             } else if (streakBotH == 3) {
-                score += 50;
+                score += 100;
             } else if (streakBotH == 2) {
-                score += 10;
+                score += 20;
             }
 
             int streakOppD2 = streak(board, row, col, 1, -1, opp); 
             if (streakOppD2 == 4) {
-                score -= 1000;
+                score -= 10000;
             } else if (streakOppD2 == 3) {
-                score -= 50;
+                score -= 100;
             } else if (streakOppD2 == 2) {
-                score -= 10;
+                score -= 20;
             }
         }
     }
@@ -109,7 +109,7 @@ int evalBoard(char** board, char bot, char opp) { //heuristic function to calc h
 
 int minimax (char** board, int isMax, int depth, char bot, char opp) {
     int score = evalBoard(board, bot, opp); //calling the heuristic function to calc the current score
-    if (depth == 0 || score >= 1000 || score <= -1000) { //if a winning move has been reached or the max depth has been exceeded (to reduce runtime, though move may be suboptimal)
+    if (depth == 0 || score >= 10000 || score <= -10000) { //if a winning move has been reached or the max depth has been exceeded (to reduce runtime, though move may be suboptimal)
         return score;
     }
     if (isMax) { //here we're seeing which move gets the bot the most score (since it's the bot's turn)
