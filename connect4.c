@@ -9,6 +9,8 @@
 enum PlacingCodes {NO_WIN, WIN, INVALID_COLUMN};
 enum Difficulties {EASY, NORMAL, HARD};
 
+static int lastStarter = 0;
+
 char** initBoard() {
     char** board = (char**) malloc(6*sizeof(char*));
     for (int i = 0; i < 6; i++) {
@@ -73,7 +75,7 @@ int main() {
     printf("Choose mode (1 or 2): \n");
     scanf("%d", &mode);
     
-    char curr = 'A';
+    char curr;
     int col, result;
     char** board = initBoard();
     int vsBot = (mode == 2);
@@ -81,7 +83,35 @@ int main() {
         printf("1. Easy\n2. Normal\n3. Hard\nChoose the bot's difficulty (1, 2, or 3): \n");
         scanf("%d", &difficulty);
         difficulty--;
+
+        //Decide who starts
+        if (lastStarter = 0){
+            if (rand() % 2 == 0){
+                curr = 'A';// player starts 
+                lastStarter = 1;
+            } else {
+                curr = 'B';// bot starts
+                lastStarter = 2;
+            }
+        }else if (lastStarter == 1){
+            // bot starts now
+            curr = 'B';
+            lastStarter = 2;
+        }else {
+            // player starts now 
+            curr = 'A';
+            lastStarter = 1;
+        }
+        if (curr == 'B'){
+            printf("bot goes first.");
+        }else {
+            printf("you goes first.)";
+        }       
+    }else {
+        // player starts first
+            curr = 'A';
     }
+    
     while (1) {
        if (!checkForRemainingMoves(board)){
            printf("No more remaining moves. It's a draw!\n");
@@ -132,3 +162,4 @@ int main() {
     return 0;
 
 }
+
