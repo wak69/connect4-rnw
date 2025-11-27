@@ -8,6 +8,7 @@
 
 enum PlacingCodes {NO_WIN, WIN, INVALID_COLUMN};
 enum Difficulties {EASY, NORMAL, HARD};
+enum Idk {BOT, NOT};
 
 char** initBoard() {
     char** board = (char**) malloc(6*sizeof(char*));
@@ -72,15 +73,26 @@ int main() {
     printf("2. Play vs Bot\n");
     printf("Choose mode (1 or 2): \n");
     scanf("%d", &mode);
-    
     char curr = 'A';
     int col, result;
     char** board = initBoard();
     int vsBot = (mode == 2);
+    int A;
+    int B;
+    int idk;
     if (vsBot) {
         printf("1. Easy\n2. Normal\n3. Hard\nChoose the bot's difficulty (1, 2, or 3): \n");
         scanf("%d", &difficulty);
         difficulty--;
+        printf("1. Player A\n2. Player B\nChoose which player the bot is (1 or 2): \n");
+        scanf("%d", &idk);
+    }
+    if (idk == 1) {
+        A = BOT;
+        B = NOT;
+    } else {
+        A = NOT;
+        B = BOT;
     }
     while (1) {
        if (!checkForRemainingMoves(board)){
@@ -88,7 +100,7 @@ int main() {
            break;
        }
         printBoard(board);
-        if(curr == 'A' || !vsBot){
+        if(curr == 'A' && A == NOT || curr == 'B' && B == NOT || !vsBot){
             // human turn
             printf("Player %c, choose a column (1-7): \n", curr);
             if(scanf("%d", &col) != 1){
